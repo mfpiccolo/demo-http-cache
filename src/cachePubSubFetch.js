@@ -102,7 +102,6 @@ const _addEventListener = ({ type, host, pathname, search }, callbacks) => {
   if (!window.CPSF_SUBSCRIPTIONS.includes(listenerHash)) {
     window.CPSF_SUBSCRIPTIONS.push(listenerHash)
     return window.addEventListener(type, event => {
-      console.count(`${type} ${host} ${pathname}`)
       const { host: eHost, pathname: ePathname, search: eSearch } = event.detail
 
       if (host && pathname && search) {

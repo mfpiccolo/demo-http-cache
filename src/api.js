@@ -15,8 +15,9 @@ export const useFetchPostSubscription = callbacks =>
 export function fetchPosts() {
   return getFromPlaceholder(`/posts`)
 }
-export const useFetchPostsSubscription = callbacks =>
+export const useFetchPostsSubscription = callbacks => {
   _buildSubscription({ host: API_HOST, pathname: /posts/, callbacks })
+}
 
 export function fetchUser(userId) {
   return getFromPlaceholder(`/users/${userId}`)
@@ -47,5 +48,5 @@ const _buildSubscription = ({ host, pathname, callbacks }) => {
     return () => {
       unsubscribe(callbacks)
     }
-  }, [])
+  }, [host, pathname, callbacks])
 }
