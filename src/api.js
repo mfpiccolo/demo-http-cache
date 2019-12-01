@@ -11,7 +11,7 @@ export const useFetchPostSubscription = callbacks =>
   useEffect(() => {
     const subscriptions = subscribe(
       {
-        host: /typicode/,
+        host: API_HOST,
         pathname: /posts\/\d/
       },
       callbacks

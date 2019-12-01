@@ -1,15 +1,17 @@
 import React from 'react'
+import Routes from './Routes'
+
 import Loader from './Loader'
 import './App.css'
-import PostsPage from './PostsPage'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <div>Example CPF</div>
         <Loader />
       </header>
-      <PostsPage></PostsPage>
+      <Routes></Routes>
     </div>
   )
 }
