@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { fetchPost } from './api'
+import { fetchPosts } from './api'
+import PostsLoader from './PostsLoader'
 
-export default function PostPage() {
-  const [title, setPost] = useState('loading')
+export default function PostsPage() {
+  const [posts, setPosts] = useState([])
 
-  const fetchAndSetPost = async () => {
-    const res = await fetchPost()
-    setPost(res.title)
+  const fetchAndSetPosts = async () => {
+    const res = await fetchPosts()
+    setPosts(res)
   }
 
   useEffect(() => {
-    fetchAndSetPost()
+    fetchAndSetPosts()
   }, [])
 
   return (
     <div>
-      <h1>Post: {title}</h1>
-      <button onClick={() => fetchAndSetPost()}>Refresh</button>
+      <h2>Posts</h2>
+      <div style={{ backgroundColor: '#00688B', width: '30%', margin: 'auto' }}>
+        <PostsLoader />
+        <button onClick={() => fetchAndSetPosts()}>Refresh</button>
+      </div>
+
+      {posts.map(post => (
+        <div key={post.id}>{post.title}</div>
+      ))}
     </div>
   )
 }

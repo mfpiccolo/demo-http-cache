@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useFetchPostSubscription } from './api'
+import React from 'react'
 
 export default function Loader({ loading }) {
   return (

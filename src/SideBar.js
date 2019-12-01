@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import PostLoader from './PostsLoader'
+import PostsLoader from './PostsLoader'
+import UsersLoader from './UsersLoader'
 
 export default function SideBar() {
   return (
@@ -10,10 +11,11 @@ export default function SideBar() {
       </li>
       <li>
         <Link to="/posts">Posts</Link>
-        <PostLoader />
+        <PostsLoader />
       </li>
       <li>
         <Link to="/users">Users</Link>
+        <UsersLoader />
       </li>
     </ul>
   )

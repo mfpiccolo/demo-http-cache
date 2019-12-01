@@ -1,7 +1,7 @@
 import React from 'react'
 import Routes from './Routes'
 
-import PostsLoader from './PostsLoader'
+import ApiLoader from './ApiLoader'
 import './App.css'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div>Example CPF</div>
-        <PostsLoader />
+        <ApiLoader />
       </header>
       <Routes></Routes>
     </div>

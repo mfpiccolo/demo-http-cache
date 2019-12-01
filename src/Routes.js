@@ -1,6 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import PostsPage from './PostPage'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import PostsPage from './PostsPage'
+import UsersPage from './UsersPage'
 import SideBar from './SideBar'
 
 const Routes = () => (
@@ -55,7 +56,7 @@ const routes = [
   {
     path: '/users',
     sidebar: () => <div>users!</div>,
-    main: () => <h2>Users</h2>
+    main: UsersPage
   }
 ]
 
