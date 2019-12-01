@@ -43,9 +43,9 @@ async function getFromPlaceholder(pathname) {
 
 const _buildSubscription = ({ host, pathname, callbacks }) => {
   useEffect(() => {
-    const subscriptions = subscribe({ host, pathname }, callbacks)
+    subscribe({ host, pathname }, callbacks)
     return () => {
-      unsubscribe(subscriptions)
+      unsubscribe(callbacks)
     }
-  }, [host, pathname, callbacks])
+  }, [])
 }

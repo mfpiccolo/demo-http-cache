@@ -1,3 +1,5 @@
+import hash from 'object-hash'
+
 // ------------------- Cache/fetch/publish ---------------------------
 const cachePublishFetch = (url, opts) => {
   const { expiry, ...options } = opts
@@ -79,32 +81,41 @@ function _parseURL(url) {
 
 // ------------------- subscribe/unsubscribe ---------------------------
 
+const STATES = ['loading', 'success', 'error']
+
 export const subscribe = (options, callbacks) => {
-  return ['loading', 'success', 'error'].map(type =>
-    _addEventListener({ type, ...options }, callbacks)
-  )
+  if (!window.CPSF_SUBSCRIPTIONS) {
+    window.CPSF_SUBSCRIPTIONS = []
+  }
+  STATES.map(type => _addEventListener({ type, ...options }, callbacks))
+  return STATES
 }
 
 export const unsubscribe = callbacks => {
-  ;['loading', 'success', 'error'].forEach(state => {
+  return STATES.forEach(state => {
     window.removeEventListener(state, callbacks[state])
   })
 }
 
 const _addEventListener = ({ type, host, pathname, search }, callbacks) => {
-  return window.addEventListener(type, event => {
-    const { host: eHost, pathname: ePathname, search: eSearch } = event.detail
+  const listenerHash = hash({ type, host, pathname, callbacks })
+  if (!window.CPSF_SUBSCRIPTIONS.includes(listenerHash)) {
+    window.CPSF_SUBSCRIPTIONS.push(listenerHash)
+    return window.addEventListener(type, event => {
+      console.count(`${type} ${host} ${pathname}`)
+      const { host: eHost, pathname: ePathname, search: eSearch } = event.detail
 
-    if (host && pathname && search) {
-      // TODO special handling for search object
-    } else if (host && pathname) {
-      if (_isMatch(host, eHost) && _isMatch(pathname, ePathname))
-        callbacks[type](event)
-    } else if (host) {
-      if (_isMatch(host, eHost)) callbacks[type](event)
-    } else {
-    }
-  })
+      if (host && pathname && search) {
+        // TODO special handling for search object
+      } else if (host && pathname) {
+        if (_isMatch(host, eHost) && _isMatch(pathname, ePathname))
+          callbacks[type](event)
+      } else if (host) {
+        if (_isMatch(host, eHost)) callbacks[type](event)
+      } else {
+      }
+    })
+  }
 }
 
 const _isMatch = (match, eMatch) => {
