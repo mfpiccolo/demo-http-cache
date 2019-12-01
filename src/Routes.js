@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import PostsPage from './PostsPage'
+import PostsPage from './PostPage'
+import SideBar from './SideBar'
 
 const Routes = () => (
   <Router>
@@ -10,20 +11,10 @@ const Routes = () => (
           padding: '10px',
           width: '15%',
           minWidth: '260px',
-          background: '#f0f0f0'
+          background: '#00688B'
         }}
       >
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/posts">Posts</Link>
-          </li>
-          <li>
-            <Link to="/users">Users</Link>
-          </li>
-        </ul>
+        <SideBar />
 
         {routes.map((route, index) => (
           <Route

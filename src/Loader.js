@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useFetchPostSubscription } from './api'
 
-export default function Loader() {
-  const [loading, setLoading] = useState(false)
-
-  useFetchPostSubscription({
-    loading: () => setLoading(true),
-    success: () => setLoading(false),
-    error: () => alert('error')
-  })
-
+export default function Loader({ loading }) {
   return (
     loading && (
       <svg
