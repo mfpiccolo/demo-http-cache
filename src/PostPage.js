@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import { fetchPost } from './api'
+import { fetchPost, useFetchPostSubscription } from './api'
+import Loader from './Loader'
 
-export default function PostPage() {
-  const [title, setTitle] = useState('loading')
+export default function PostPage({
+  match: {
+    params: { id }
+  }
+}) {
+  const [post, setPost] = useState({})
 
-  const fetchAndSetTitle = async refresh => {
-    const params = refresh ? '1?abc=123' : '1'
-    const res = await fetchPost(params)
-
-    setTitle(res.title)
+  const fetchAndSetPost = async () => {
+    const res = await fetchPost(id)
+    setPost(res)
   }
 
   useEffect(() => {
-    fetchAndSetTitle()
-  }, [])
+    fetchAndSetPost()
+  }, [id])
 
   return (
     <div>
-      <h1>Post: {title}</h1>
-      <button onClick={() => fetchAndSetTitle(true)}>Refresh</button>
+      <div style={{ backgroundColor: '#00688B', width: '30%', margin: 'auto' }}>
+        <Loader subscription={useFetchPostSubscription} />
+        <button onClick={() => fetchAndSetPost()}>Refresh</button>
+      </div>
+
+      {post && (
+        <>
+          <h2>{post.title}</h2>
+          <div>{post.body}</div>
+        </>
+      )}
     </div>
   )
 }

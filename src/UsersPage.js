@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { fetchUsers } from './api'
-import UsersLoader from './UsersLoader'
+import { fetchUsers, useFetchUsersSubscription } from './api'
+import Loader from './Loader'
 
 export default function UsersPage() {
   const [users, setUsers] = useState([])
@@ -18,7 +18,7 @@ export default function UsersPage() {
     <div>
       <h2>Users</h2>
       <div style={{ backgroundColor: '#00688B', width: '30%', margin: 'auto' }}>
-        <UsersLoader />
+        <Loader subscription={useFetchUsersSubscription} />
         <button onClick={() => fetchAndSetUsers()}>Refresh</button>
       </div>
 

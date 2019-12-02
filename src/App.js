@@ -1,7 +1,7 @@
 import React from 'react'
 import Routes from './Routes'
-
-import ApiLoader from './ApiLoader'
+import { useFetchApiSubscription } from './api'
+import Loader from './Loader'
 import './App.css'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div>Example CPF</div>
-        <ApiLoader />
+        <Loader subscription={useFetchApiSubscription} />
       </header>
       <Routes></Routes>
     </div>

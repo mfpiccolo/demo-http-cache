@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import PostsLoader from './PostsLoader'
-import UsersLoader from './UsersLoader'
+import Loader from './Loader'
+import { useFetchPostsSubscription, useFetchUsersSubscription } from './api'
 
 export default function SideBar() {
   return (
@@ -11,11 +11,11 @@ export default function SideBar() {
       </li>
       <li>
         <Link to="/posts">Posts</Link>
-        <PostsLoader />
+        <Loader subscription={useFetchPostsSubscription} />
       </li>
       <li>
         <Link to="/users">Users</Link>
-        <UsersLoader />
+        <Loader subscription={useFetchUsersSubscription} />
       </li>
     </ul>
   )

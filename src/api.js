@@ -33,7 +33,7 @@ export const useFetchUsersSubscription = callbacks =>
 
 async function getFromPlaceholder(pathname) {
   const response = await cachePubSubFetch(`https://${API_HOST}${pathname}`, {
-    expiry: 5000
+    expiry: 60000
   })
 
   if (response.status !== 200) {

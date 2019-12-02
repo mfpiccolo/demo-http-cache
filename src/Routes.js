@@ -1,6 +1,8 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { renderRoutes } from 'react-router-config'
 import PostsPage from './PostsPage'
+import PostPage from './PostPage'
 import UsersPage from './UsersPage'
 import SideBar from './SideBar'
 
@@ -16,27 +18,9 @@ const Routes = () => (
         }}
       >
         <SideBar />
-
-        {routes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            exact={route.exact}
-            component={route.sidebar}
-          />
-        ))}
       </div>
 
-      <div style={{ flex: 1, padding: '10px' }}>
-        {routes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            exact={route.exact}
-            component={route.main}
-          />
-        ))}
-      </div>
+      <div style={{ flex: 1, padding: '10px' }}>{renderRoutes(routes)}</div>
     </div>
   </Router>
 )
@@ -45,18 +29,21 @@ const routes = [
   {
     path: '/',
     exact: true,
-    sidebar: () => <div>home!</div>,
-    main: () => <h2>Home</h2>
+    component: () => <h2>Home</h2>
   },
   {
     path: '/posts',
-    sidebar: () => <div>posts!</div>,
-    main: PostsPage
+    exact: true,
+    component: PostsPage
+  },
+  {
+    path: '/posts/:id',
+    component: PostPage
   },
   {
     path: '/users',
-    sidebar: () => <div>users!</div>,
-    main: UsersPage
+    exact: true,
+    component: UsersPage
   }
 ]
 

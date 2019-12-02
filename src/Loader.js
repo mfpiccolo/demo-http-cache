@@ -1,6 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-export default function Loader({ loading }) {
+export default function Loader({ subscription }) {
+  const [loading, setLoading] = useState(false)
+
+  subscription({
+    loading: () => setLoading(true),
+    success: () => setLoading(false),
+    error: () => alert('error')
+  })
+
   return (
     loading && (
       <svg

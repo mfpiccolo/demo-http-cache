@@ -99,22 +99,23 @@ export const unsubscribe = callbacks => {
 
 const _addEventListener = ({ type, host, pathname, search }, callbacks) => {
   const listenerHash = hash({ type, host, pathname, callbacks })
-  if (!window.CPSF_SUBSCRIPTIONS.includes(listenerHash)) {
-    window.CPSF_SUBSCRIPTIONS.push(listenerHash)
-    return window.addEventListener(type, event => {
-      const { host: eHost, pathname: ePathname, search: eSearch } = event.detail
+  // TOOD: figure out how to
+  // if (!window.CPSF_SUBSCRIPTIONS.includes(listenerHash)) {
+  window.CPSF_SUBSCRIPTIONS.push(listenerHash)
+  return window.addEventListener(type, event => {
+    const { host: eHost, pathname: ePathname, search: eSearch } = event.detail
 
-      if (host && pathname && search) {
-        // TODO special handling for search object
-      } else if (host && pathname) {
-        if (_isMatch(host, eHost) && _isMatch(pathname, ePathname))
-          callbacks[type](event)
-      } else if (host) {
-        if (_isMatch(host, eHost)) callbacks[type](event)
-      } else {
-      }
-    })
-  }
+    if (host && pathname && search) {
+      // TODO special handling for search object
+    } else if (host && pathname) {
+      if (_isMatch(host, eHost) && _isMatch(pathname, ePathname))
+        callbacks[type](event)
+    } else if (host) {
+      if (_isMatch(host, eHost)) callbacks[type](event)
+    } else {
+    }
+  })
+  // }
 }
 
 const _isMatch = (match, eMatch) => {
