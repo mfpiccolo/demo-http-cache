@@ -48,5 +48,5 @@ const _buildSubscription = ({ host, pathname, callbacks }) => {
     return () => {
       unsubscribe(callbacks)
     }
-  }, [host, pathname, callbacks])
+  }, [])
 }
