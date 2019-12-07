@@ -60,9 +60,9 @@ async function getFromPlaceholder(pathname) {
 
 const _buildSubscription = ({ hostMatcher, pathnameMatcher, callbacks }) => {
   useEffect(() => {
-    subscribe({ hostMatcher, pathnameMatcher }, callbacks)
+    const token = subscribe({ hostMatcher, pathnameMatcher }, callbacks)
     return () => {
-      unsubscribe(callbacks)
+      unsubscribe(token, callbacks)
     }
   }, [])
 }

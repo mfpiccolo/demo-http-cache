@@ -97,13 +97,11 @@ export const subscribe = (options, callbacks) => {
   if (!window.CPSF_SUBSCRIPTIONS) {
     window.CPSF_SUBSCRIPTIONS = {}
   }
-  _addEventListener(options, callbacks)
+  return _addEventListener(options, callbacks)
 }
 
-export const unsubscribe = callbacks => {
-  // return STATES.forEach(state => {
-  //   window.removeEventListener(state, callbacks[state])
-  // })
+export const unsubscribe = (matcherHash, callbacks) => {
+  window.removeEventListener(matcherHash, callbacks)
 }
 
 const _addEventListener = (
@@ -117,7 +115,7 @@ const _addEventListener = (
     pathnameMatcher
   }
 
-  return window.addEventListener(matcherHash, event => {
+  window.addEventListener(matcherHash, event => {
     const { type, host, pathname, search } = event.detail
 
     _isMatchUrl(
@@ -126,6 +124,7 @@ const _addEventListener = (
       () => callbacks[type](event)
     )
   })
+  return { matcherHash, callbacks }
 }
 
 const _isMatchUrl = (
