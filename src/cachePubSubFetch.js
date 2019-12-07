@@ -19,12 +19,12 @@ const cachePublishFetch = (url, opts) => {
     }
   }
 
-  _dispatchEvent('loading', cacheKey)
+  _matchAndDispatchEvents({ url, type: 'loading' })
 
   return fetch(url, options)
     .then(response => {
       if (response.status === 200) {
-        _dispatchEvent('success', cacheKey)
+        _matchAndDispatchEvents({ url, type: 'success' })
 
         let ct = response.headers.get('Content-Type')
         if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
@@ -40,14 +40,26 @@ const cachePublishFetch = (url, opts) => {
       return response
     })
     .catch(error => {
-      _dispatchEvent('error', cacheKey, error)
+      _matchAndDispatchEvents({ url, type: 'error' })
     })
 }
 export default cachePublishFetch
 
-const _dispatchEvent = (type, cacheKey, error) => {
-  var event = new CustomEvent(type, {
-    detail: { ..._parseURL(cacheKey), error }
+const _matchAndDispatchEvents = ({ url, type }) => {
+  Object.entries(window.CPSF_SUBSCRIPTIONS).forEach(
+    ([matcherHash, { hostMatcher, pathnameMatcher }]) => {
+      const { host, pathname } = _parseURL(url)
+
+      _isMatchUrl({ hostMatcher, pathnameMatcher }, { host, pathname }, () => {
+        _dispatchEvent({ matcherHash, url, type })
+      })
+    }
+  )
+}
+
+const _dispatchEvent = ({ matcherHash, url, type, error }) => {
+  var event = new CustomEvent(matcherHash, {
+    detail: { matcherHash, ..._parseURL(url), type, error }
   })
   window.dispatchEvent(event)
 }
@@ -81,49 +93,63 @@ function _parseURL(url) {
 
 // ------------------- subscribe/unsubscribe ---------------------------
 
-const STATES = ['loading', 'success', 'error']
-
 export const subscribe = (options, callbacks) => {
   if (!window.CPSF_SUBSCRIPTIONS) {
-    window.CPSF_SUBSCRIPTIONS = []
+    window.CPSF_SUBSCRIPTIONS = {}
   }
-  STATES.map(type => _addEventListener({ type, ...options }, callbacks))
-  return STATES
+  _addEventListener(options, callbacks)
 }
 
 export const unsubscribe = callbacks => {
-  return STATES.forEach(state => {
-    window.removeEventListener(state, callbacks[state])
+  // return STATES.forEach(state => {
+  //   window.removeEventListener(state, callbacks[state])
+  // })
+}
+
+const _addEventListener = (
+  { hostMatcher, pathnameMatcher, search },
+  callbacks
+) => {
+  const matcherHash = hash({ hostMatcher, pathnameMatcher })
+
+  window.CPSF_SUBSCRIPTIONS[matcherHash] = {
+    hostMatcher,
+    pathnameMatcher
+  }
+
+  return window.addEventListener(matcherHash, event => {
+    const { type, host, pathname, search } = event.detail
+
+    _isMatchUrl(
+      { hostMatcher, pathnameMatcher },
+      { host, pathname, search },
+      () => callbacks[type](event)
+    )
   })
 }
 
-const _addEventListener = ({ type, host, pathname, search }, callbacks) => {
-  const listenerHash = hash({ type, host, pathname, callbacks })
-  // TOOD: figure out how to
-  // if (!window.CPSF_SUBSCRIPTIONS.includes(listenerHash)) {
-  window.CPSF_SUBSCRIPTIONS.push(listenerHash)
-  return window.addEventListener(type, event => {
-    const { host: eHost, pathname: ePathname, search: eSearch } = event.detail
-
-    if (host && pathname && search) {
-      // TODO special handling for search object
-    } else if (host && pathname) {
-      if (_isMatch(host, eHost) && _isMatch(pathname, ePathname))
-        callbacks[type](event)
-    } else if (host) {
-      if (_isMatch(host, eHost)) callbacks[type](event)
-    } else {
-    }
-  })
-  // }
+const _isMatchUrl = (
+  { hostMatcher, pathnameMatcher },
+  { host, pathname, search },
+  callback
+) => {
+  if (hostMatcher && pathnameMatcher && search) {
+    // TODO special handling for search object
+  } else if (hostMatcher && pathnameMatcher) {
+    if (_isMatch(hostMatcher, host) && _isMatch(pathnameMatcher, pathname))
+      callback()
+  } else if (hostMatcher) {
+    if (_isMatch(hostMatcher, host)) callback()
+  } else {
+  }
 }
 
-const _isMatch = (match, eMatch) => {
-  const isRegex = match instanceof RegExp
-  const isString = typeof match === 'string'
+const _isMatch = (matcher, matchee) => {
+  const isRegex = matcher instanceof RegExp
+  const isString = typeof matcher === 'string'
   if (isRegex) {
-    if (match.test(eMatch)) return true
+    if (matcher.test(matchee)) return true
   } else if (isString) {
-    if (match === eMatch) return true
+    if (matcher === matchee) return true
   }
 }
