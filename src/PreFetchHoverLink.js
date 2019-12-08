@@ -6,7 +6,7 @@ export default function PreFetchHoverLink({ to, onHover, delay, children }) {
   const [isHovering, hoverProps] = useHover({ mouseEnterDelayMS: delay })
 
   if (isHovering) {
-    onHover()
+    // onHover()
   }
   return (
     <Link {...hoverProps} to={to}>

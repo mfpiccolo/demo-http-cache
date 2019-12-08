@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { fetchPost, useFetchPostSubscription } from './api'
+import pSCFetch, { subscribe, unsubscribe } from 'psc-fetch'
+
+import { useFetchPostSubscription, API_HOST } from './api'
 import Loader from './Loader'
 
 export default function PostPage({
@@ -9,20 +11,34 @@ export default function PostPage({
 }) {
   const [post, setPost] = useState({})
 
-  const fetchAndSetPost = async () => {
-    const res = await fetchPost(id)
-    setPost(res)
-  }
+  useEffect(() => {
+    const unsubscribeToken = subscribe(
+      { hostMatcher: API_HOST, pathnameMatcher: /posts\/\d/ },
+      { success: async ({ response }) => setPost(await response.json()) }
+    )
+
+    return () => {
+      unsubscribe(unsubscribeToken)
+    }
+  }, [])
 
   useEffect(() => {
-    fetchAndSetPost()
+    pSCFetch(`https://${API_HOST}/posts/${id}`, {
+      expiry: 6000
+    })
   }, [id])
 
   return (
     <div>
       <div style={{ backgroundColor: '#00688B', width: '30%', margin: 'auto' }}>
         <Loader subscription={useFetchPostSubscription} />
-        <button onClick={() => fetchAndSetPost()}>Refresh</button>
+        <button
+          onClick={() =>
+            pSCFetch(`https://${API_HOST}/posts/${id}`, { expiry: 6000 })
+          }
+        >
+          Refresh
+        </button>
       </div>
 
       {post && (

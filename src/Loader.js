@@ -6,7 +6,7 @@ export default function Loader({ subscription }) {
   subscription({
     loading: () => setLoading(true),
     success: () => setLoading(false),
-    error: () => alert('error')
+    error: error => console.log({ error })
   })
 
   return (
