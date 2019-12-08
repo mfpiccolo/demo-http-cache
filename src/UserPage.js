@@ -12,15 +12,7 @@ export default function UserPage({
   const [user, setUser] = useState({})
 
   useEffect(() => {
-    const unsubscribeToken = subscribe({
-      hostMatcher: API_HOST,
-      pathnameMatcher: /users\/\d/
-    })
-
     fetchUser()
-    return () => {
-      unsubscribe(unsubscribeToken)
-    }
   }, [])
 
   const fetchUser = async () => {
