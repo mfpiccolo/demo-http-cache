@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import cachePubSubFetch, { subscribe, unsubscribe } from './cachePubSubFetch'
+import pSCFetch, { subscribe, unsubscribe } from 'psc-fetch'
 
 export const API_HOST = 'jsonplaceholder.typicode.com'
 
@@ -48,7 +48,7 @@ export const useFetchUsersSubscription = callbacks =>
   })
 
 async function getFromPlaceholder(pathname) {
-  const response = await cachePubSubFetch(`https://${API_HOST}${pathname}`, {
+  const response = await pSCFetch(`https://${API_HOST}${pathname}`, {
     expiry: 6000
   })
 
