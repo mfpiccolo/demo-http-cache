@@ -4,6 +4,7 @@ import { renderRoutes } from 'react-router-config'
 import PostsPage from './PostsPage'
 import PostPage from './PostPage'
 import UsersPage from './UsersPage'
+import UserPage from './UserPage'
 import SideBar from './SideBar'
 
 const Routes = () => (
@@ -44,6 +45,10 @@ const routes = [
     path: '/users',
     exact: true,
     component: UsersPage
+  },
+  {
+    path: '/users/:id',
+    component: UserPage
   }
 ]
 

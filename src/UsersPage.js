@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { fetchUsers, useFetchUsersSubscription } from './api'
+import { fetchUsers, fetchUser, useFetchUsersSubscription } from './api'
 import Loader from './Loader'
+import PreFetchHoverLink from './PreFetchHoverLink'
 
 export default function UsersPage() {
   const [users, setUsers] = useState([])
@@ -22,8 +23,16 @@ export default function UsersPage() {
         <button onClick={() => fetchAndSetUsers()}>Refresh</button>
       </div>
 
-      {users.map(user => (
-        <div key={user.id}>{user.name}</div>
+      {users.map(({ id, name }) => (
+        <div key={id}>
+          <PreFetchHoverLink
+            to={`/users/${id}`}
+            onHover={() => fetchUser(id)}
+            delay={65}
+          >
+            {name}
+          </PreFetchHoverLink>
+        </div>
       ))}
     </div>
   )
