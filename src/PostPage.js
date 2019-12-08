@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import pSCFetch, { subscribe, unsubscribe } from 'psc-fetch'
 
-import { useFetchPostSubscription, API_HOST } from './api'
+import { useFetchPostSubscription, API_HOST, EXPIRY } from './api'
 import Loader from './Loader'
 
 export default function PostPage({
@@ -24,7 +24,7 @@ export default function PostPage({
 
   useEffect(() => {
     pSCFetch(`https://${API_HOST}/posts/${id}`, {
-      expiry: 6000
+      expiry: EXPIRY
     })
   }, [id])
 
@@ -34,7 +34,7 @@ export default function PostPage({
         <Loader subscription={useFetchPostSubscription} />
         <button
           onClick={() =>
-            pSCFetch(`https://${API_HOST}/posts/${id}`, { expiry: 6000 })
+            pSCFetch(`https://${API_HOST}/posts/${id}`, { expiry: EXPIRY })
           }
         >
           Refresh

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import pSCFetch, { subscribe, unsubscribe } from 'psc-fetch'
 
 export const API_HOST = 'jsonplaceholder.typicode.com'
+export const EXPIRY = 10000
 
 export const useFetchApiSubscription = callbacks =>
   _buildSubscription({ hostMatcher: API_HOST, callbacks })
@@ -49,7 +50,7 @@ export const useFetchUsersSubscription = callbacks =>
 
 async function getFromPlaceholder(pathname) {
   const response = await pSCFetch(`https://${API_HOST}${pathname}`, {
-    expiry: 6000
+    expiry: EXPIRY
   })
 
   if (response.status !== 200) {
